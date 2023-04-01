@@ -2,19 +2,20 @@ from flask import Flask
 
 app = Flask(__name__)
 
-
-
+carbonEmissions = 0
+money = 0
+numberRecycled = 0
 
 @app.route("/getCarbon")
-def hello_world():
-    return "<p>Hello, world!</p>"
+def getCarbon():
+    return str(carbonEmissions)
 
 
 @app.route("/getMoney")
 def getMoney():
-    return "This is your money"
+    return str(money)
 
 
-@app.route("numberRecycled")
+@app.route("/numberRecycled")
 def getNumberRecycled():
-    return "Number recycled"
+    return str(getNumberRecycled)
