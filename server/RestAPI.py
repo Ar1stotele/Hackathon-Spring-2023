@@ -39,7 +39,14 @@ def updateCans():
 @app.route("/send", methods=["POST", "GET"])
 def get():
     data = request.json
-    print("data", data)
+    print(data)
+    if data["type"] == "plastic":
+        print("PLASTIC")
+    elif data["type"] == "can":
+        print("CANS")
+    elif data["type"] == "glass":
+        print("GLASS")
+
     return "SUCCESS"
 
 @app.route("/plastic", methods=["POST", "GET"])
