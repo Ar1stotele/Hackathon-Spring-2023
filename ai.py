@@ -4,17 +4,12 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from PIL import Image
-from matplotlib import pyplot as plt
-from tensorflow.python.util import compat
-from tensorflow.core.protobuf import saved_model_pb2
 from google.protobuf import text_format
 import pprint
 import json
 import os
-from object_detection.utils import visualization_utils as vis_util
-from object_detection.utils import dataset_util, label_map_util
+from object_detection.utils import label_map_util
 from object_detection.protos import string_int_label_map_pb2
-import time
 import cv2
 
 cam = cv2.VideoCapture(0)
