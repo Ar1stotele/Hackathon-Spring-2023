@@ -1,7 +1,8 @@
 from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 totalCarbon = 20
 glassBottles = 50
 cans = 40
