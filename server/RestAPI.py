@@ -41,11 +41,28 @@ def get():
     data = request.json
     print(data)
     if data["type"] == "plastic":
-        print("PLASTIC")
+        global plasticBottles
+        global totalItems
+        global totalCarbon
+        totalCarbon += 0.828
+        totalItems += 1
+        plasticBottles += 1
+        print(totalItems)
     elif data["type"] == "can":
-        print("CANS")
+        global cans
+        global totalItems
+        global totalCarbon
+        totalCarbon += 0.0968
+        totalItems += 1
+        cans += 1
     elif data["type"] == "glass":
-        print("GLASS")
+        global glassBottles
+        global totalItems
+        global totalCarbon
+        totalItems += 1
+        glassBottles += 1
+        totalCarbon += .003
+        print(totalItems)
 
     return "SUCCESS"
 
