@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -34,6 +35,12 @@ def updateCans():
     return "SUCCESS"
 
 
+
+@app.route("/send", methods=["POST", "GET"])
+def get():
+    data = request.json
+    print("data", data)
+    return "SUCCESS"
 
 @app.route("/plastic", methods=["POST", "GET"])
 def updatePlastic():
