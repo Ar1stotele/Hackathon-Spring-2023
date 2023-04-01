@@ -58,13 +58,9 @@ def detect(detection_graph, test_image_path):
                 [detection_boxes, detection_scores, detection_classes, num_detections],
                 feed_dict={image_tensor: image2tensor(image)}
             )
-            classsqueeze = np.squeeze(classes).astype(np.int32)[0] #represents the item with the highest score, so the ome the AI sees most in the image
-            scoresqueeze = np.squeeze(scores)[0] #represents the score of the item with the highest score
-            if classsqueeze > 1 and scoresqueeze > 0.20: #trash found with an at least 35% likelyhood
-                print (categories[classsqueeze-1]['name'])
-                print (scoresqueeze)
-            else: #no trash found
-                print ("no trash found")
+            class_squeeze = np.squeeze(classes).astype(np.int32)[0] #represents the item with the highest score, so the ome the AI sees most in the image
+            score_squeeze = np.squeeze(scores)[0] #represents the score of the item with the highest score
+            return {'mainItem': class_squeeze, 'confidence': score_squeeze}
 
 # Create LabelMap
 
@@ -102,11 +98,20 @@ category_index = label_map_util.create_category_index(categories)
 
 detection_graph = reconstruct("aistuff/ssd_mobilenet_v2_taco_2018_03_29.pb")
 
+
+# This should be all the code you need to work with
 while True:
     success, image = cam.read()
     if success:
         cv2.imwrite("img.jpg", image)
-        detect(detection_graph, 'img.jpg')
+        detectResults = detect(detection_graph, 'img.jpg')
+        # ['mainItem'] is the item most recognized in the current frame by the AI, ['confidence'] is the AI's confidence that's it's correct about what it labels the item as
+        if detectResults['mainItem'] > 1 and detectResults['confidence'] > 0.20: # if trash found with an at least 20% confidence
+                itemName = categories[detectResults['mainItem']-1]['name']
+                print (itemName)
+                print (detectResults['confidence'])
+        else: #no trash found
+            print ("no trash found")
     else:
         print("no cam :()")
     #time.sleep(1)    
