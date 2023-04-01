@@ -11,7 +11,7 @@ function Account() {
       </p>
 
       <div className="mx-[15%] mt-[10%]">
-        <p>Carbon Emission Preserved: {userInfo.carbonEmission} KG</p>
+        <p>Carbon Emission Preserved: {userInfo.carbonEmission.toFixed(2)} KG</p>
         <p>Cans recycled: {userInfo.cansRecycled}</p>
         <p>Plastic bottles recycled: {userInfo.plasticBottlesRecycled}</p>
         <p>Total items recycled: {userInfo.totalItems}</p>

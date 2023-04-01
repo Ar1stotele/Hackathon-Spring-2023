@@ -20,7 +20,9 @@ export const QrCodeReader = () => {
           constraints={{ facingMode: "user" }}
         />
       ) : (
-        <p>{data}</p>
+        <div className="flex justify-center items-center mt-20">
+          <p className="text-center">{data}</p>
+        </div>
       )}
     </>
   );
