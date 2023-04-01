@@ -19,7 +19,7 @@ import cv2
 
 cam = cv2.VideoCapture(0)
 
-# reconstruct frozen graph
+#Don't touch anything until the comment near the bottom
 def reconstruct(pb_path):
     if not os.path.isfile(pb_path):
         print("Error: %s not found" % pb_path)
@@ -35,7 +35,6 @@ def reconstruct(pb_path):
     print("Success!")
     return detection_graph
 
-# visualize detection
 def image2np(image):
     (w, h) = image.size
     return np.array(image.getdata()).reshape((h, w, 3)).astype(np.uint8)
@@ -98,8 +97,9 @@ category_index = label_map_util.create_category_index(categories)
 
 detection_graph = reconstruct("aistuff/ssd_mobilenet_v2_taco_2018_03_29.pb")
 
+# ----------------------------------------------------------------------------------------------------------------
+# Everything below here should be all the code you need to work with
 
-# This should be all the code you need to work with
 while True:
     success, image = cam.read()
     if success:
@@ -113,5 +113,5 @@ while True:
         else: #no trash found
             print ("no trash found")
     else:
-        print("no cam :()")
+        print("no cam :(")
     #time.sleep(1)    
