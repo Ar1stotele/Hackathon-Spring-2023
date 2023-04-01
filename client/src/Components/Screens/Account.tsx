@@ -1,23 +1,9 @@
 import { useContext, useEffect } from "react";
 
 import UserInfoContext from "../../Store/userInformationContext";
-import { fetchAccountStatistics } from "../../API/fetchAccountStatistics";
 
 function Account() {
   const userInfo = useContext(UserInfoContext);
-  useEffect(() => {
-    (async () => {
-      const data = await fetchAccountStatistics();
-      console.log({ data });
-      console.log(typeof data.cans);
-      userInfo.setCarbonEmission(data.Carbon)
-      userInfo.setCansRecycled(data.cans)
-      userInfo.setGlassBottlesRecycled(data.glass)
-      userInfo.setPlasticBottlesRecycled(data.plastic)
-      
-      
-    })();
-  }, []);
   return (
     <div>
       <p className="text-center pt-4">
@@ -28,7 +14,7 @@ function Account() {
         <p>Carbon Emission Preserved: {userInfo.carbonEmission} KG</p>
         <p>Cans recycled: {userInfo.cansRecycled}</p>
         <p>Plastic bottles recycled: {userInfo.plasticBottlesRecycled}</p>
-        <p>Glass bottles recycled: {userInfo.glassBottlesRecycled}</p>
+        <p>Total items recycled: {userInfo.totalItems}</p>
       </div>
     </div>
   );

@@ -7,22 +7,32 @@ import { Navigation } from "./Navigation/Navigation";
 import { useContext, useEffect } from "react";
 import { ROUTES } from "./constants";
 import UserInfoContext from "./Store/userInformationContext";
+import { fetchAccountStatistics } from "./API/fetchAccountStatistics";
 
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const userInfoCtx = useContext(UserInfoContext);
+  const userInfo = useContext(UserInfoContext);
 
   useEffect(() => {
-    if (location.pathname !== ROUTES.guest && userInfoCtx.username == "") {
+    (async () => {
+      const data = await fetchAccountStatistics();
+      userInfo.setCarbonEmission(data.totalCarbon);
+      userInfo.setCansRecycled(data.cans);
+      userInfo.setTotalItems(data.totalItems);
+      userInfo.setPlasticBottlesRecycled(data.plasticBottles);
+    })();
+    if (location.pathname !== ROUTES.guest && userInfo.username == "") {
       navigate(ROUTES.guest);
     }
   }, [location.pathname]);
   return (
-    <div className="App">
+    <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-[100vh]">
       <Toaster />
       <Header />
-      <Navigation />
+      <div className="text-white">
+        <Navigation />
+      </div>
     </div>
   );
 }

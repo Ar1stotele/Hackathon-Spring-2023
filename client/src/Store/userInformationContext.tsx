@@ -8,6 +8,7 @@ export interface UserInfoContextInterface {
   plasticBottlesRecycled: number;
   glassBottlesRecycled: number;
   cansRecycled: number;
+  totalItems: number;
 
   setBalance: (arg: SetStateAction<string>) => void;
   setUsername: (arg: SetStateAction<string>) => void;
@@ -15,6 +16,7 @@ export interface UserInfoContextInterface {
   setPlasticBottlesRecycled: (arg: SetStateAction<number>) => void;
   setGlassBottlesRecycled: (arg: SetStateAction<number>) => void;
   setCansRecycled: (arg: SetStateAction<number>) => void;
+  setTotalItems: (arg: SetStateAction<number>) => void;
 }
 
 const UserInfoContext = createContext<UserInfoContextInterface>({
@@ -24,6 +26,7 @@ const UserInfoContext = createContext<UserInfoContextInterface>({
   plasticBottlesRecycled: 0,
   glassBottlesRecycled: 0,
   cansRecycled: 0,
+  totalItems: 0,
 
   setBalance: (arg: SetStateAction<string>) => {},
   setUsername: (arg: SetStateAction<string>) => {},
@@ -31,6 +34,7 @@ const UserInfoContext = createContext<UserInfoContextInterface>({
   setPlasticBottlesRecycled: (arg: SetStateAction<number>) => {},
   setGlassBottlesRecycled: (arg: SetStateAction<number>) => {},
   setCansRecycled: (arg: SetStateAction<number>) => {},
+  setTotalItems: (arg: SetStateAction<number>) => {},
 });
 
 type Props = {
@@ -44,6 +48,7 @@ export const UserInfoContextProvider: FC<Props> = ({ children }: Props) => {
   const [glassBottlesRecycled, setGlassBottlesRecycled] = useState(0);
   const [cansRecycled, setCansRecycled] = useState(0);
   const [carbonEmission, setCarbonEmission] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
 
   return (
     <UserInfoContext.Provider
@@ -54,6 +59,7 @@ export const UserInfoContextProvider: FC<Props> = ({ children }: Props) => {
         plasticBottlesRecycled,
         glassBottlesRecycled,
         cansRecycled,
+        totalItems,
 
         setBalance,
         setUsername,
@@ -61,6 +67,7 @@ export const UserInfoContextProvider: FC<Props> = ({ children }: Props) => {
         setPlasticBottlesRecycled,
         setGlassBottlesRecycled,
         setCansRecycled,
+        setTotalItems
       }}
     >
       {children}
