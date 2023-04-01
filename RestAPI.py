@@ -9,7 +9,7 @@ cans = 0
 totalItems = 0
 plasticBottles = 0
 
-@app.route("/glass")
+@app.route("/glass", methods=["POST"])
 def updateglass():
     glassBottles = glassBottles + 1
     print(glassBottles)
