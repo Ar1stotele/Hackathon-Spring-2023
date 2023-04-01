@@ -1,0 +1,7 @@
+numpy
+pandas
+tensorflow
+pillow
+protobuf
+object_detection
+opencv-python
