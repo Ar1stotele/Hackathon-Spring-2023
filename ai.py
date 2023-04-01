@@ -11,6 +11,30 @@ import os
 from object_detection.utils import label_map_util
 from object_detection.protos import string_int_label_map_pb2
 import cv2
+from pyzbar import pyzbar
+import keyboard
+import time
+import requests
+import json
+
+
+def read_barcodes(frame):
+    barcodes = pyzbar.decode(frame)
+    for barcode in barcodes:
+        x, y, w, h = barcode.rect
+        # 1
+        barcode_info = barcode.data.decode('utf-8')
+        print(barcode_info)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        # 2
+        font = cv2.FONT_HERSHEY_DUPLEX
+        cv2.putText(frame, barcode_info, (x + 6, y - 6), font, 2.0, (255, 255, 255), 1)
+        # 3
+        with open("barcode_result.txt", mode='w') as file:
+            file.write("Recognized Barcode:" + barcode_info)
+            # return the bounding box of the barcode
+    return frame
 
 cam = cv2.VideoCapture(0)
 
@@ -94,19 +118,62 @@ detection_graph = reconstruct("aistuff/ssd_mobilenet_v2_taco_2018_03_29.pb")
 
 # ----------------------------------------------------------------------------------------------------------------
 # Everything below here should be all the code you need to work with
+def displayImage(image):
+    glassbin = cv2.imread(image, cv2.IMREAD_ANYCOLOR)
+    cv2.imshow("output", glassbin)
+    cv2.setWindowProperty("output", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    cv2.waitKey(1)
+    time.sleep(5)
 
+url = 'http://10.35.96.149:5000/send'
+aiEnabled = False
+barcodeArr = {'0070847811169': 'can', '0078000003864': 'plastic'}
+aiData = {"Drink can": 'can', "Disposable plastic cup": 'can', "Food can": 'can', "Plastic film": 'plastic', "Clear plastic bottle": 'plastic', 'Aerosol': 'can'}
+images = {'can': 'display\Images\metalbin.jpg', 'plastic': 'display\Images\plasticbin.jpg', 'glass': 'display\Images\glassbin.jpg'}
 while True:
+    if keyboard.is_pressed("space"):
+        aiEnabled = not aiEnabled
+        print("aiEnabled:", aiEnabled)
+        time.sleep(1)
     success, image = cam.read()
     if success:
+        ret, frame = cam.read()
         cv2.imwrite("img.jpg", image)
-        detectResults = detect(detection_graph, 'img.jpg')
         # ['mainItem'] is the item most recognized in the current frame by the AI, ['confidence'] is the AI's confidence that's it's correct about what it labels the item as
-        if detectResults['mainItem'] > 1 and detectResults['confidence'] > 0.20: # if trash found with an at least 20% confidence
+        if aiEnabled:
+            detectResults = detect(detection_graph, 'img.jpg')
+            if detectResults['mainItem'] > 1 and detectResults['confidence'] > 0.70: # if trash found with an at least 20% confidence
                 itemName = categories[detectResults['mainItem']-1]['name']
                 print (itemName)
-                print (detectResults['confidence'])
-        else: #no trash found
-            print ("no trash found")
+                print (detectResults['confidence']) 
+                for item in aiData:
+                    if itemName == item:
+                        displayImage(images[aiData[item]])
+                        data = {'type': aiData[item]}
+                        json_data = json.dumps(data)
+                        headers = {'Content-type': 'application/json'}
+                        response = requests.post(url, data=json_data, headers=headers)
+                        print(response.status_code)
+                        print(response.content) 
+            else: #no trash found
+                print ("no trash found")
+        else:
+            codes = pyzbar.decode(frame)
+            for barcode in codes:
+                for bc in barcodeArr:
+                    if barcode.data.decode("utf-8") == bc:
+                        displayImage(images[barcodeArr[bc]])
+                        data = {'type': barcodeArr[bc]}
+                        json_data = json.dumps(data)
+                        headers = {'Content-type': 'application/json'}
+                        response = requests.post(url, data=json_data, headers=headers)
+                        print(response.status_code)
+                        print(response.content)
+            frame = read_barcodes(frame)
+        cv2.imshow('output', frame)
+        if cv2.waitKey(1) & 0xFF == 27:
+            break
+        time.sleep(.5)
     else:
         print("no cam :(")
     #time.sleep(1)    

@@ -5,3 +5,4 @@ pillow
 protobuf
 object_detection
 opencv-python
+protos
